@@ -1,6 +1,6 @@
 image:
   repository: localhost:32000/go-lxd-vm-dashboard
-  tag: "latest"
+  tag: ""
   pullPolicy: Always
 
 service:
