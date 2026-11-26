@@ -18,12 +18,12 @@ help:
 # Build Docker image
 build:
 	@echo "Building go-lxd-vm-dashboard image..."
-	docker build -t localhost:32000/go-lxd-vm-dashboard:latest ./app
+	docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:latest ./app
 
 # Push to registry
 push: build
 	@echo "Pushing to registry..."
-	docker push localhost:32000/go-lxd-vm-dashboard:latest
+	docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
 
 # Deploy via kubectl using docker-compose - no helm chart, just a simple deployment
 deploy:

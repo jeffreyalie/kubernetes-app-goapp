@@ -28,7 +28,7 @@ cp docker-compose.example.yml docker-compose.yml
 4. **Deploy**:
 
 ```bash
-docker push localhost:32000/go-lxd-vm-dashboard:latest
+docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
 microk8s kubectl apply -f deployment.yaml
 ```
 

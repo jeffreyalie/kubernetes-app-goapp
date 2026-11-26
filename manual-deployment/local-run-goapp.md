@@ -4,7 +4,7 @@
 
 ```bash
 cd /home/jeffrey/Documents/final-gitea-terraform-ansible/go-lxd-vm-dashboard/app
-docker build -t localhost:32000/go-lxd-vm-dashboard:latest .
+docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:latest .
 ```
 
 **Or with a versioned tag for reproducibility:**
@@ -60,7 +60,7 @@ docker run -d \
   -e VAULT_ROLE_ID=your-role-id-here \
   -e VAULT_SECRET_ID=your-secret-id-here \
   -e LXD_ADDR=https://10.0.0.162:8443 \
-  localhost:32000/go-lxd-vm-dashboard:latest
+  harbor.local/microk8s/go-lxd-vm-dashboard:latest
 ```
 
 ### 3. Alternative: Using `.env` File
@@ -72,7 +72,7 @@ docker run -d \
   --name go-lxd-dashboard \
   -p 8080:8080 \
   --env-file .env \
-  localhost:32000/go-lxd-vm-dashboard:latest
+  harbor.local/microk8s/go-lxd-vm-dashboard:latest
 ```
 
 ### 4. Run with Volume Persistence (Optional)
@@ -88,7 +88,7 @@ docker run -d \
   -e VAULT_ROLE_ID=your-role-id-here \
   -e VAULT_SECRET_ID=your-secret-id-here \
   -e LXD_ADDR=https://10.0.0.162:8443 \
-  localhost:32000/go-lxd-vm-dashboard:latest
+  harbor.local/microk8s/go-lxd-vm-dashboard:latest
 ```
 
 ---
@@ -124,7 +124,7 @@ docker ps -a | grep go-lxd-dashboard
 
 ```bash
 docker build --no-cache \
-  -t localhost:32000/go-lxd-vm-dashboard:debug \
+  -t harbor.local/microk8s/go-lxd-vm-dashboard:debug \
   --progress=plain \
   ./app
 ```
@@ -199,7 +199,7 @@ path "homelab/data/lxd" {
 After building, push the image to your registry:
 
 ```bash
-docker push localhost:32000/go-lxd-vm-dashboard:latest
+docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
 ```
 
 ---

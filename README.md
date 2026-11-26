@@ -241,7 +241,8 @@ microk8s enable dns registry ingress helm3
 ```
 ### One-time infrastructure setup
 
-**MicroK8s** — create namespaces and inject OpenBao credentials as K8s secrets:
+**MicroK8s level secrests** — create namespaces and inject OpenBao credentials as K8s secrets.
+used by Goapp via opensec()
 ```bash
 microk8s kubectl create namespace dev
 microk8s kubectl create namespace staging
@@ -256,17 +257,30 @@ for NS in dev staging live; do
     --dry-run=client -o yaml | microk8s kubectl apply -f -
 done
 ```
-
-**Add ingress hosts** to `/etc/hosts` on the machine you browse from:
+**MicroK8s level secrests***
+Used by container to pull image from harbor. settings via deployment.yaml
 ```bash
-echo "<microk8s-node-ip>  dev.local staging.local live.local" | sudo tee -a /etc/hosts
+      imagePullSecrets:
+        - name: harbor-pull   
 ```
-
-**Gitea org secrets** — add at org level so all repos can use them:
+```bash
+for NS in dev staging live; do
+  microk8s kubectl create secret docker-registry harbor-pull \
+    --docker-server=harbor.local \
+    --docker-username='robot$microk8s+microk8s' \
+    --docker-password='EdWc3ihTH1uKvaJ5TNmQsX6pJaOrZAvZ' \
+    -n $NS --dry-run=client -o yaml | microk8s kubectl apply -f -
+done
 ```
+**Gitea org secrets** — add at org level for GHA runner to get kubeconfig from openbao:
+```bash
 Settings → Secrets → VAULT_ADDR
                    → VAULT_ROLE_ID
                    → VAULT_SECRET_ID
+```
+**Add ingress hosts** to `/etc/hosts` on the machine you browse from:
+```bash
+echo "<microk8s-node-ip>  dev.local staging.local live.local" | sudo tee -a /etc/hosts
 ```
 ---
 
@@ -395,8 +409,8 @@ Every HTTP request to `/` triggers this sequence:
 Multi-stage build — Go binary compiled in `golang:1.26.2-alpine`, copied into `alpine:latest` final image. Only the binary and `index.html` are included. No credentials baked in.
 
 ```bash
-docker build -t 10.206.213.243:32000/go-lxd-vm-dashboard:latest ./app
-docker push 10.206.213.243:32000/go-lxd-vm-dashboard:latest
+docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:latest ./app
+docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
 ```
 
 **Helm chart:**

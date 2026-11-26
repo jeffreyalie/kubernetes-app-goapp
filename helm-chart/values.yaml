@@ -1,5 +1,5 @@
 image:
-  repository: localhost:32000/go-lxd-vm-dashboard
+  repository: harbor.local/microk8s/go-lxd-vm-dashboard
   tag: ""
   pullPolicy: Always
 

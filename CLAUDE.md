@@ -42,8 +42,8 @@ A lightweight Go web application that displays live status of LXD instances (VMs
 **Build the Go application:**
 ```bash
 cd app
-docker build -t 10.206.213.243:32000/go-lxd-vm-dashboard:latest .
-docker push 10.206.213.243:32000/go-lxd-vm-dashboard:latest
+docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:latest .
+docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
 ```
 
 **Deploy to environment:**
@@ -54,14 +54,14 @@ helm upgrade --install go-lxd-vm-dashboard \
   --values helm-chart/values-dev.yaml \
   --set image.tag=latest \
   --set image.pullPolicy=Always \
-  10.206.213.243:32000/go-lxd-vm-dashboard
+  harbor.local/microk8s/go-lxd-vm-dashboard
 ```
 
 **Full deployment with local registry push:**
 ```bash
 # Build and push
-docker build -t 10.206.213.243:32000/go-lxd-vm-dashboard:$TAG ./app
-docker push 10.206.213.243:32000/go-lxd-vm-dashboard:$TAG
+docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:$TAG ./app
+docker push harbor.local/microk8s/go-lxd-vm-dashboard:$TAG
 
 # Deploy to target environment
 KUBECONFIG=/path/to/kubeconfig \
