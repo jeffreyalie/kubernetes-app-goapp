@@ -141,6 +141,7 @@ jobs:
       - name: Verify rollout
         run: |
           export KUBECONFIG=/tmp/kubeconfig
+          kubectl rollout restart deployment/go-lxd-vm-dashboard -n live
           kubectl rollout status deployment/go-lxd-vm-dashboard -n live --timeout=90s
 
       - name: Cleanup kubeconfig
