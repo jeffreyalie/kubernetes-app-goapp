@@ -242,7 +242,7 @@ microk8s enable dns registry ingress helm3
 ### One-time infrastructure setup
 
 **MicroK8s level secrests** — create namespaces and inject OpenBao credentials as K8s secrets.
-used by Goapp via opensec()
+used by Goapp via opensec() for lxd certs
 ```bash
 microk8s kubectl create namespace dev
 microk8s kubectl create namespace staging
