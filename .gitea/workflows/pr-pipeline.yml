@@ -14,6 +14,8 @@ env:
   # MicroK8s server IP (update in Gitea org secrets when changing)
   IMAGE_REPO: harbor.local/microk8s/go-lxd-vm-dashboard
   IMAGE_TAG: pr-${{ github.run_number }}
+  RELEASE_NAME: go-lxd-vm-dashboard
+  HELM_CHART_DIR: helm-chart
 
 jobs:
   # ----------------------------------------------------------------
@@ -85,7 +87,10 @@ jobs:
   deploy-dev-pr:
     needs: build-pr
     runs-on: ubuntu-latest
-    environment: dev           # ← Gitea environment gate (add reviewers in repo settings)
+    # environment: dev           # ← Gitea environment gate (add reviewers in repo settings)
+    NAMESPACE: dev
+    VALUES_FILE: helm-chart/values-dev.yaml
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -131,18 +136,19 @@ jobs:
         run: |
           export KUBECONFIG=/tmp/kubeconfig
 
-          helm upgrade --install go-lxd-vm-dashboard ./helm-chart \
-            --namespace dev \
+          helm upgrade --install ${{ env.RELEASE_NAME }} ${{ env.HELM_CHART_DIR }} \
+            --namespace ${{ env.NAMESPACE }} \
             --create-namespace \
-            --values helm-chart/values-dev.yaml \
+            --values ${{ env.VALUES_FILE }} \
+            --set image.repository=${{ env.IMAGE_REPO }} \
             --set image.tag=${{ env.IMAGE_TAG }} \
             --wait --timeout 2m
 
       - name: Verify rollout
         run: |
           export KUBECONFIG=/tmp/kubeconfig
-          kubectl rollout restart deployment/go-lxd-vm-dashboard -n dev
-          kubectl rollout status deployment/go-lxd-vm-dashboard -n dev --timeout=90s
+          kubectl rollout restart deployment/${{ env.RELEASE_NAME }} -n ${{ env.NAMESPACE }}
+          kubectl rollout status deployment/${{ env.RELEASE_NAME }} -n ${{ env.NAMESPACE }} --timeout=90s
 
       - name: Cleanup kubeconfig
         if: always()

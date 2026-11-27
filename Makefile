@@ -11,8 +11,9 @@ init:
 tidy:
 > $(GO) go mod tidy
 
+# gofmt -w . to write the changes
 fmt:
-> $(GO) gofmt -w .
+> $(GO) gofmt -l .
 
 check:
 > $(GO) sh -c "gofmt -l . ; go vet ./... && go build -o /tmp/test ."
