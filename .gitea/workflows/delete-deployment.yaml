@@ -1,4 +1,4 @@
-name: De;ete Deployment
+name: Delete Deployment
 
 on:
   workflow_dispatch:
