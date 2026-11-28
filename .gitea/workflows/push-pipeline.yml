@@ -178,7 +178,7 @@ jobs:
       - name: Verify rollout
         run: |
           export KUBECONFIG=/tmp/kubeconfig
-          kubectl rollout restart deployment$/{{ env.RELEASE_NAME }}  -n ${{env.NAMESPACE}}
+          kubectl rollout restart deployment/${{ env.RELEASE_NAME }}  -n ${{env.NAMESPACE}}
           kubectl rollout status deployment/${{ env.RELEASE_NAME }}  -n ${{env.NAMESPACE}} --timeout=90s
 
           echo "${{ env.RELEASE_NAME }} restarted successfully"
