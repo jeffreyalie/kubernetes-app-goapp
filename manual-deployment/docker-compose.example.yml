@@ -1,4 +1,4 @@
-# docker-compose.example.yml - Example configuration for go-lxd-vm-dashboard
+# docker-compose.example.yml - Example configuration for kubernetes-app-goapp-dashboard
 # Copy this file to docker-compose.yml and fill in your values
 #
 # Usage:
@@ -9,11 +9,11 @@
 version: '3.8'
 
 services:
-  go-lxd-vm-dashboard:
+  kubernetes-app-goapp-dashboard:
     build:
       context: .
       dockerfile: dockerfile
-    image: harbor.local/microk8s/go-lxd-vm-dashboard:latest
+    image: harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest
     ports:
       - "8080:8080"
     environment:

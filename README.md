@@ -289,8 +289,8 @@ echo "<microk8s-node-ip>  dev.local staging.local live.local" | sudo tee -a /etc
 ### 1. Clone and create a branch
 
 ```bash
-git clone https://gitea.local/Infra/go-lxd-vm-dashboard-gha.git
-cd go-lxd-vm-dashboard-gha
+git clone https://gitea.local/Infra/kubernetes-app-goapp-gha.git
+cd kubernetes-app-goapp-gha
 git checkout -b feature/my-change
 ```
 
@@ -409,8 +409,8 @@ Every HTTP request to `/` triggers this sequence:
 Multi-stage build — Go binary compiled in `golang:1.26.2-alpine`, copied into `alpine:latest` final image. Only the binary and `index.html` are included. No credentials baked in.
 
 ```bash
-docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:latest ./app
-docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
+docker build -t harbor.local/microk8s/kubernetes-app-goapp:latest ./app
+docker push harbor.local/microk8s/kubernetes-app-goapp:latest
 ```
 
 **Helm chart:**

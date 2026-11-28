@@ -1,4 +1,4 @@
-module go-lxd-vm-dashboard
+module kubernetes-app-goapp-dashboard
 
 go 1.26.2
 

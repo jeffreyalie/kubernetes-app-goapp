@@ -14,7 +14,7 @@ on:
           - live
 
 env:
-  RELEASE_NAME: go-lxd-vm-dashboard
+  RELEASE_NAME: kubernetes-app-goapp-dashboard
 
 jobs:
   uninstall:

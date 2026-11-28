@@ -12,9 +12,9 @@ on:
 
 env:
   # MicroK8s server IP (update in Gitea org secrets when changing)
-  IMAGE_REPO: harbor.local/microk8s/go-lxd-vm-dashboard
+  IMAGE_REPO: harbor.local/microk8s/kubernetes-app-goapp-dashboard
   IMAGE_TAG: pr-${{ github.run_number }}
-  RELEASE_NAME: go-lxd-vm-dashboard
+  RELEASE_NAME: kubernetes-app-goapp-dashboard
   HELM_CHART_DIR: helm-chart
 
 jobs:

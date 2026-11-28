@@ -1,8 +1,8 @@
-# docker-compose.yml for go-lxd-vm-dashboard
+# docker-compose.yml for kubernetes-app-goapp-dashboard
 # Use this file for easy local development and deployment
 #
 # Quick Start:
-#   1. cd /path/to/go-lxd-vm-dashboard
+#   1. cd /path/to/kubernetes-app-goapp-dashboard
 #   2. microk8s kubectl create secret generic openbao-creds \
 #     --from-literal=VAULT_ADDR=https://<vault-addr>:8200 \
 #     --from-literal=VAULT_ROLE_ID=<role-id> \
@@ -15,11 +15,11 @@
 version: '3.8'
 
 services:
-  go-lxd-vm-dashboard:
+  kubernetes-app-goapp-dashboard:
     build:
       context: .
       dockerfile: dockerfile
-    image: harbor.local/microk8s/go-lxd-vm-dashboard:latest
+    image: harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest
     ports:
       - "8080:8080"
     environment:

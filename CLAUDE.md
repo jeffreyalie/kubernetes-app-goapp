@@ -42,30 +42,30 @@ A lightweight Go web application that displays live status of LXD instances (VMs
 **Build the Go application:**
 ```bash
 cd app
-docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:latest .
-docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
+docker build -t harbor.local/microk8s/kubernetes-app-goapp:latest .
+docker push harbor.local/microk8s/kubernetes-app-goapp:latest
 ```
 
 **Deploy to environment:**
 ```bash
 # Example dev deployment
-helm upgrade --install go-lxd-vm-dashboard \
+helm upgrade --install kubernetes-app-goapp \
   --namespace dev \
   --values helm-chart/values-dev.yaml \
   --set image.tag=latest \
   --set image.pullPolicy=Always \
-  harbor.local/microk8s/go-lxd-vm-dashboard
+  harbor.local/microk8s/kubernetes-app-goapp
 ```
 
 **Full deployment with local registry push:**
 ```bash
 # Build and push
-docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:$TAG ./app
-docker push harbor.local/microk8s/go-lxd-vm-dashboard:$TAG
+docker build -t harbor.local/microk8s/kubernetes-app-goapp:$TAG ./app
+docker push harbor.local/microk8s/kubernetes-app-goapp:$TAG
 
 # Deploy to target environment
 KUBECONFIG=/path/to/kubeconfig \
-helm upgrade --install go-lxd-vm-dashboard \
+helm upgrade --install kubernetes-app-goapp \
   --namespace $NS \
   --values helm-chart/values-$NS.yaml \
   --set image.tag=$TAG \
@@ -185,7 +185,7 @@ Workflow files use `.github/workflows/` directory inside the app subdirectory.
 
 **Helm install pattern:**
 ```bash
-helm upgrade --install go-lxd-vm-dashboard \
+helm upgrade --install kubernetes-app-goapp \
   --namespace $NS \
   --values helm-chart/values-$NS.yaml \
   --set image.tag=$TAG

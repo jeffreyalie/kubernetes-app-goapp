@@ -3,8 +3,8 @@
 ## 📦 Build the Docker Image
 
 ```bash
-cd /home/jeffrey/Documents/final-gitea-terraform-ansible/go-lxd-vm-dashboard/app
-docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:latest .
+cd /home/jeffrey/Documents/final-gitea-terraform-ansible/kubernetes-app-goapp-dashboard/app
+docker build -t harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest .
 ```
 
 **Or with a versioned tag for reproducibility:**
@@ -30,7 +30,7 @@ The application reads the following environment variables at runtime:
 ### Create `.env` File (Recommended)
 
 ```bash
-cd /home/jeffrey/Documents/final-gitea-terraform-ansible/go-lxd-vm-dashboard/app
+cd /home/jeffrey/Documents/final-gitea-terraform-ansible/kubernetes-app-goapp-dashboard/app
 cat > .env << 'EOF'
 VAULT_ADDR=https://your-vault-address:8200
 VAULT_ROLE_ID=your-role-id-here
@@ -60,7 +60,7 @@ docker run -d \
   -e VAULT_ROLE_ID=your-role-id-here \
   -e VAULT_SECRET_ID=your-secret-id-here \
   -e LXD_ADDR=https://10.0.0.162:8443 \
-  harbor.local/microk8s/go-lxd-vm-dashboard:latest
+  harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest
 ```
 
 ### 3. Alternative: Using `.env` File
@@ -72,7 +72,7 @@ docker run -d \
   --name go-lxd-dashboard \
   -p 8080:8080 \
   --env-file .env \
-  harbor.local/microk8s/go-lxd-vm-dashboard:latest
+  harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest
 ```
 
 ### 4. Run with Volume Persistence (Optional)
@@ -88,7 +88,7 @@ docker run -d \
   -e VAULT_ROLE_ID=your-role-id-here \
   -e VAULT_SECRET_ID=your-secret-id-here \
   -e LXD_ADDR=https://10.0.0.162:8443 \
-  harbor.local/microk8s/go-lxd-vm-dashboard:latest
+  harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest
 ```
 
 ---
@@ -124,7 +124,7 @@ docker ps -a | grep go-lxd-dashboard
 
 ```bash
 docker build --no-cache \
-  -t harbor.local/microk8s/go-lxd-vm-dashboard:debug \
+  -t harbor.local/microk8s/kubernetes-app-goapp-dashboard:debug \
   --progress=plain \
   ./app
 ```
@@ -160,10 +160,10 @@ After building and pushing a new image:
 
 ```bash
 # Restart the deployment to pick up new image
-microk8s kubectl rollout restart deployment/go-lxd-vm-dashboard -n dev
+microk8s kubectl rollout restart deployment/kubernetes-app-goapp-dashboard -n dev
 
 # Verify rollout status
-microk8s kubectl rollout status deployment/go-lxd-vm-dashboard -n dev --watch
+microk8s kubectl rollout status deployment/kubernetes-app-goapp-dashboard -n dev --watch
 
 # Check logs
 docker logs -f go-lxd-dashboard
@@ -199,7 +199,7 @@ path "homelab/data/lxd" {
 After building, push the image to your registry:
 
 ```bash
-docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
+docker push harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest
 ```
 
 ---
@@ -218,7 +218,7 @@ docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
 To test without Docker:
 
 ```bash
-cd /home/jeffrey/Documents/final-gitea-terraform-ansible/go-lxd-vm-dashboard/app
+cd /home/jeffrey/Documents/final-gitea-terraform-ansible/kubernetes-app-goapp-dashboard/app
 go run .
 ```
 

@@ -1,4 +1,4 @@
-# Makefile for go-lxd-vm-dashboard deployment tasks
+# Makefile for kubernetes-app-goapp-dashboard deployment tasks
 # Usage: make <target>
 
 .PHONY: build push deploy logs restart verify clean help
@@ -17,13 +17,13 @@ help:
 
 # Build Docker image
 build:
-	@echo "Building go-lxd-vm-dashboard image..."
-	docker build -t harbor.local/microk8s/go-lxd-vm-dashboard:latest ./app
+	@echo "Building kubernetes-app-goapp-dashboard image..."
+	docker build -t harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest ./app
 
 # Push to registry
 push: build
 	@echo "Pushing to registry..."
-	docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
+	docker push harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest
 
 # Deploy via kubectl using docker-compose - no helm chart, just a simple deployment
 deploy:
@@ -33,18 +33,18 @@ deploy:
 # Helm deployment (alternative)
 helm-deploy:
 	@echo "Deploying with Helm..."
-	microk8s helm upgrade --install go-lxd-vm-dashboard ./../helm-chart --namespace dev
+	microk8s helm upgrade --install kubernetes-app-goapp-dashboard ./../helm-chart --namespace dev
 
 # View logs
 logs:
 	@echo "Viewing container logs..."
-	microk8s kubectl logs -f deployment/go-lxd-vm-dashboard -n dev
+	microk8s kubectl logs -f deployment/kubernetes-app-goapp-dashboard -n dev
 
 # Restart deployment (pick up new image)
 restart:
 	@echo "Rolling restart to pick up changes..."
-	microk8s kubectl rollout restart deployment/go-lxd-vm-dashboard -n dev
-	microk8s kubectl rollout status deployment/go-lxd-vm-dashboard -n dev --watch
+	microk8s kubectl rollout restart deployment/kubernetes-app-goapp-dashboard -n dev
+	microk8s kubectl rollout status deployment/kubernetes-app-goapp-dashboard -n dev --watch
 
 # Verify code and dependencies
 verify:

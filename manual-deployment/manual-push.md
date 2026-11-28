@@ -28,7 +28,7 @@ cp docker-compose.example.yml docker-compose.yml
 4. **Deploy**:
 
 ```bash
-docker push harbor.local/microk8s/go-lxd-vm-dashboard:latest
+docker push harbor.local/microk8s/kubernetes-app-goapp-dashboard:latest
 microk8s kubectl apply -f deployment.yaml
 ```
 
@@ -51,7 +51,7 @@ curl http://localhost:8080
 
 ### Local Development
 - Run container directly on host: `microk8s kubectl apply -f docker-compose.yml`
-- Quick rebuild: Edit files, then `microk8s kubectl rollout restart deployment/go-lxd-vm-dashboard -n dev`
+- Quick rebuild: Edit files, then `microk8s kubectl rollout restart deployment/kubernetes-app-goapp-dashboard -n dev`
 
 ### Simple Deployment
 - Use docker-compose for isolated testing before Helm deployment
