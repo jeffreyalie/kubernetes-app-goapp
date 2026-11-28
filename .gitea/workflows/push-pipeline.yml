@@ -10,16 +10,12 @@ name: (live)
 on:
   workflow_dispatch:
       inputs:
-      skip_lint:
+      skip_yaml_lint:
         description: "Skip yaml lint"
         type: boolean
         default: false
-      skip_build:
-        description: "Skip go build"
-        type: boolean
-        default: false
-      skip_deploy:
-        description: "Skip deploy"
+      skip_go_lint:
+        description: "Skip go lint"
         type: boolean
         default: false
 
@@ -35,6 +31,7 @@ jobs:
   # Job 0.0: Linting
   # ----------------------------------------------------------------
   yaml-linting:
+    if: ${{ github.event.inputs.skip_yaml_lint != 'true' }}
     uses: admin/reusable-linting/.gitea/workflows/lint.yaml@main
     with:
       helm_dir: "./helm-chart"
@@ -43,6 +40,7 @@ jobs:
   # ----------------------------------------------------------------
   go-linting:
     needs: yaml-linting
+    if: ${{ !cancelled() && !failure() && github.event.inputs.skip_go_lint != 'true' }}
     uses: admin/reusable-linting/.gitea/workflows/go_lint.yaml@main
     with:
       app_dir: "app"
@@ -52,7 +50,7 @@ jobs:
   # Job 1: Build & push the Docker image (no approval needed)
   # ----------------------------------------------------------------
   build:
-
+    needs: go-linting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
