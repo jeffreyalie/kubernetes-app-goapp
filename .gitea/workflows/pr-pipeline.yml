@@ -50,6 +50,7 @@ jobs:
   # Job 1: Build & push the Docker image (no approval needed)
   # ----------------------------------------------------------------
   build-pr:
+    if: ${{ !cancelled() && !failure() }}
     needs: go-linting
     runs-on: ubuntu-latest
     steps:
