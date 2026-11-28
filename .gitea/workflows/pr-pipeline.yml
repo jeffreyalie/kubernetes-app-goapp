@@ -28,9 +28,9 @@ jobs:
   # ----------------------------------------------------------------
   # Job 0: Linting
   # ----------------------------------------------------------------
-  docker-linting:
+  go-linting:
     needs: yaml-linting
-    uses: admin/reusable-linting/.gitea/workflows/docker_lint.yaml@main
+    uses: admin/reusable-linting/.gitea/workflows/go_lint.yaml@main
     with:
       app_dir: "app"
       go_ver: "1.26.2"  # check go.mod first
@@ -39,6 +39,7 @@ jobs:
   # Job 1: Build & push the Docker image (no approval needed)
   # ----------------------------------------------------------------
   build-pr:
+    needs: go-linting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

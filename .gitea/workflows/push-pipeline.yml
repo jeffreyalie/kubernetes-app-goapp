@@ -9,6 +9,19 @@ name: (live)
 # ------------------------------------------------------------------
 on:
   workflow_dispatch:
+      inputs:
+      skip_lint:
+        description: "Skip yaml lint"
+        type: boolean
+        default: false
+      skip_build:
+        description: "Skip go build"
+        type: boolean
+        default: false
+      skip_deploy:
+        description: "Skip deploy"
+        type: boolean
+        default: false
 
 env:
   # MicroK8s server IP (update in Gitea org secrets when changing)
@@ -28,9 +41,9 @@ jobs:
   # ----------------------------------------------------------------
   # Job 0: Linting
   # ----------------------------------------------------------------
-  docker-linting:
+  go-linting:
     needs: yaml-linting
-    uses: admin/reusable-linting/.gitea/workflows/docker_lint.yaml@main
+    uses: admin/reusable-linting/.gitea/workflows/go_lint.yaml@main
     with:
       app_dir: "app"
       go_ver: "1.26.2"  # check go.mod first
@@ -39,7 +52,7 @@ jobs:
   # Job 1: Build & push the Docker image (no approval needed)
   # ----------------------------------------------------------------
   build:
-    needs: docker-linting
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -166,7 +179,7 @@ jobs:
       - name: Verify rollout
         run: |
           export KUBECONFIG=/tmp/kubeconfig
-          kubectl rollout restart deployment${{ env.RELEASE_NAME }}  -n li${{env.NAMESPACE}}ve
+          kubectl rollout restart deployment${{ env.RELEASE_NAME }}  -n ${{env.NAMESPACE}}ve
           kubectl rollout status deployment/${{ env.RELEASE_NAME }}  -n ${{env.NAMESPACE}} --timeout=90s
 
           echo "${{ env.RELEASE_NAME }} restarted successfully"
