@@ -9,7 +9,7 @@ name: (dev → staging)
 # ------------------------------------------------------------------
 on:
   workflow_dispatch:
-      inputs:
+    inputs:
       skip_yaml_lint:
         description: "Skip yaml lint"
         type: boolean
