@@ -30,7 +30,7 @@ jobs:
   # ----------------------------------------------------------------
   docker-linting:
     needs: yaml-linting
-    uses: admin/reusable-linting/.gitea/workflows/docker-lint.yaml@main
+    uses: admin/reusable-linting/.gitea/workflows/docker_lint.yaml@main
     with:
       app_dir: "app"
       go_ver: "1.26.2"  # check go.mod first
