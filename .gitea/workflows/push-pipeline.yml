@@ -9,15 +9,6 @@ name: (live)
 # ------------------------------------------------------------------
 on:
   workflow_dispatch:
-    inputs:
-      skip_yaml_lint:
-        description: "Skip yaml lint"
-        type: boolean
-        default: false
-      skip_go_lint:
-        description: "Skip go lint"
-        type: boolean
-        default: false
 
 env:
   # MicroK8s server IP (update in Gitea org secrets when changing)
@@ -31,7 +22,6 @@ jobs:
   # Job 0.0: Linting
   # ----------------------------------------------------------------
   yaml-linting:
-    if: ${{ github.event.inputs.skip_yaml_lint != 'true' }}
     uses: admin/reusable-linting/.gitea/workflows/lint.yaml@main
     with:
       helm_dir: "./helm-chart"
@@ -40,7 +30,6 @@ jobs:
   # ----------------------------------------------------------------
   go-linting:
     needs: yaml-linting
-    if: ${{ !cancelled() && !failure() && github.event.inputs.skip_go_lint != 'true' }}
     uses: admin/reusable-linting/.gitea/workflows/go_lint.yaml@main
     with:
       app_dir: "app"
@@ -51,7 +40,6 @@ jobs:
   # ----------------------------------------------------------------
   build:
     needs: go-linting
-    if: ${{ !cancelled() && !failure() }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
