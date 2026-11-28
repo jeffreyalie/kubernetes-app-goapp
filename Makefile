@@ -1,60 +1,59 @@
 # Makefile
-# usage make <target>
+# usage: make <target>
 
-.PHONY: init tidy fmt check all lint-yaml lint-action lint-helm help
+.PHONY: init tidy fmt fmt-fix check all lint lint-yaml lint-action lint-helm help
 .DEFAULT_GOAL := help
 
-# ----------variables----------------------
+# ---------- variables ----------
 HELM_CHART_PATH := ./helm-chart/kubernetes-app-nginx
 GO = docker run --rm --user $(shell id -u):$(shell id -g) \
   -e HOME=/tmp -e GOCACHE=/tmp/.cache \
   -v "$(CURDIR)/app":/app -w /app golang:1.26.2-alpine
 
-
 help:
-	@echo "Available targets:"
-	@echo "  lint-yaml - Check YAML syntax"
-	@echo "  lint-helm - Lint Helm charts"
-  @echo "  lintin-action - Lint GHA workflows actions"
-  @echo "----------------------------------------------"
-  @echo "   init - go init"
-  @echo "   tidy - go tidy"
-  @echo "   fmt - gofmt -l"
-  @echo "   chechk - chech all"
-  @echo "   all - go all"
+	@echo "Go targets:"
+	@echo "  init        - go mod init"
+	@echo "  tidy        - go mod tidy"
+	@echo "  fmt         - list files needing gofmt (no changes)"
+	@echo "  fmt-fix     - gofmt -w (rewrite files)"
+	@echo "  check       - gofmt check + go vet + go build"
+	@echo "  all         - tidy + fmt-fix + vet + build"
+	@echo "File targets:"
+	@echo "  lint-yaml   - yamllint -s"
+	@echo "  lint-action - actionlint on Gitea workflows"
+	@echo "  lint-helm   - helm lint"
+	@echo "  lint        - run all three file linters"
 
-#----------Go linting-----------------------
+# ---------- Go ----------
 init:
-  $(GO) go mod init grafan-lxd-monitoring
+	$(GO) go mod init grafana-lxd-monitoring
 
 tidy:
-  $(GO) go mod tidy
+	$(GO) go mod tidy
 
 fmt:
-  $(GO) gofmt -w .
+	$(GO) gofmt -l .
+
+fmt-fix:
+	$(GO) gofmt -w .
 
 check:
-  $(GO) sh -c "gofmt -l . ; go vet ./... && go build -o /tmp/test ."
+	$(GO) sh -c 'test -z "$$(gofmt -l .)" || { gofmt -l .; exit 1; } && go vet ./... && go build -o /tmp/test . && echo OK'
 
 all:
-  $(GO) sh -c "go mod tidy && gofmt -w . && go vet ./... && go build -o /tmp/main ."
+	$(GO) sh -c 'go mod tidy && gofmt -w . && go vet ./... && go build -o /tmp/main .'
 
-# --------- Files Linting--------------
+# ---------- Files ----------
+lint: lint-yaml lint-action lint-helm
 
 lint-yaml:
-	@echo "Checking YAML syntax..."
+	@echo "Checking YAML..."
 	yamllint -s .
 
-	@echo "Workflow linting completed!"
-
 lint-action:
-	@echo "Checking workflow syntax..."
+	@echo "Checking workflows..."
 	actionlint .gitea/workflows/*.yml
 
-	@echo "Workflow linting completed!"
-
 lint-helm:
-	@echo "Linting Helm charts..."
+	@echo "Linting Helm chart..."
 	helm lint $(HELM_CHART_PATH)
-
-	@echo "Helm linting completed!"
