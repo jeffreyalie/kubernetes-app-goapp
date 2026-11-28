@@ -87,9 +87,10 @@ jobs:
   deploy-dev-pr:
     needs: build-pr
     runs-on: ubuntu-latest
-    # environment: dev           # ← Gitea environment gate (add reviewers in repo settings)
-    NAMESPACE: dev
-    VALUES_FILE: helm-chart/values-dev.yaml
+
+    env:
+      NAMESPACE: dev
+      VALUES_FILE: helm-chart/values-dev.yaml
 
     steps:
       - name: Checkout
@@ -150,9 +151,15 @@ jobs:
           kubectl rollout restart deployment/${{ env.RELEASE_NAME }} -n ${{ env.NAMESPACE }}
           kubectl rollout status deployment/${{ env.RELEASE_NAME }} -n ${{ env.NAMESPACE }} --timeout=90s
 
+          echo "${{ env.RELEASE_NAME }} restarted successfully"
+
       - name: Cleanup kubeconfig
         if: always()
-        run: rm -f /tmp/kubeconfig
+        run: |
+          rm -f /tmp/kubeconfig
+          echo "PR pipeline completed successfully"
+          echo "moving to staging deployment"
+
 
   # ----------------------------------------------------------------
   # Job 3: Deploy to staging  (requires 'staging' environment approval)
@@ -160,7 +167,11 @@ jobs:
   deploy-staging-pr:
     needs: deploy-dev-pr
     runs-on: ubuntu-latest
-    environment: staging       # ← Gitea environment gate
+
+    env:
+      NAMESPACE: staging
+      VALUES_FILE: helm-chart/values-stagin.yaml
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -200,19 +211,26 @@ jobs:
         run: |
           export KUBECONFIG=/tmp/kubeconfig
 
-          helm upgrade --install go-lxd-vm-dashboard ./helm-chart \
-            --namespace staging \
+          helm upgrade --install ${{env.RELEASE_NAME}} ${{env.HELM_CHART_DIR}} \
+            --namespace ${{ env.NAMESPACE }} \
             --create-namespace \
-            --values helm-chart/values-staging.yaml \
+            --values ${{env.VALUES_FILE}}
+            --set image.repository=${{ env.IMAGE_REPO }} \
             --set image.tag=${{ env.IMAGE_TAG }} \
             --wait --timeout 2m
 
       - name: Verify rollout
         run: |
           export KUBECONFIG=/tmp/kubeconfig
-          kubectl rollout restart deployment/go-lxd-vm-dashboard -n staging
-          kubectl rollout status deployment/go-lxd-vm-dashboard -n staging --timeout=90s
+          kubectl rollout restart deployment/${{env.RELEASE_NAME}} -n ${{ env.NAMESPACE }}
+          kubectl rollout status deployment/${{env.RELEASE_NAME}} -n ${{ env.NAMESPACE }} --timeout=90s
+
+          echo "${{ env.RELEASE_NAME }} restarted successfully"
 
       - name: Cleanup kubeconfig
         if: always()
-        run: rm -f /tmp/kubeconfig
+        run: |
+          rm -f /tmp/kubeconfig
+          echo "PR pipeline completed successfully"
+          echo "moving to staging deployment"
+

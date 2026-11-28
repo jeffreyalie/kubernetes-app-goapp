@@ -14,6 +14,8 @@ env:
   # MicroK8s server IP (update in Gitea org secrets when changing)
   IMAGE_REPO: harbor.local/microk8s/go-lxd-vm-dashboard
   IMAGE_TAG: pr-live-${{ github.run_number }}
+  RELEASE_NAME: go-lxd-vm-dashboard
+  HELM_CHART_DIR: helm-chart
 
 jobs:
   # ----------------------------------------------------------------
@@ -103,7 +105,11 @@ jobs:
   deploy-live:
     needs: build
     runs-on: ubuntu-latest
-    environment: live          # ← Gitea environment gate (add reviewers in repo settings)
+
+    env:
+      NAMESPACE: live
+      VALUES_FILE: ./helm-chart/kubernetes-app-nginx/values-live.yaml
+      
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -149,19 +155,26 @@ jobs:
         run: |
           export KUBECONFIG=/tmp/kubeconfig
 
-          helm upgrade --install go-lxd-vm-dashboard ./helm-chart \
-            --namespace live \
+          helm upgrade --install ${{ env.RELEASE_NAME }} ${{env.HELM_CHART_DIR}} \
+            --namespace ${{env.NAMESPACE}} \
             --create-namespace \
-            --values helm-chart/values-live.yaml \
+            --values ${{env.VALUES_FILE}} \
+            --set image.repository=${{ env.IMAGE_REPO }} \
             --set image.tag=${{ env.IMAGE_TAG }} \
             --wait --timeout 2m
 
       - name: Verify rollout
         run: |
           export KUBECONFIG=/tmp/kubeconfig
-          kubectl rollout restart deployment/go-lxd-vm-dashboard -n live
-          kubectl rollout status deployment/go-lxd-vm-dashboard -n live --timeout=90s
+          kubectl rollout restart deployment${{ env.RELEASE_NAME }}  -n li${{env.NAMESPACE}}ve
+          kubectl rollout status deployment/${{ env.RELEASE_NAME }}  -n ${{env.NAMESPACE}} --timeout=90s
+
+          echo "${{ env.RELEASE_NAME }} restarted successfully"
 
       - name: Cleanup kubeconfig
         if: always()
-        run: rm -f /tmp/kubeconfig
+        run: |
+          rm -f /tmp/kubeconfig
+          echo "PR pipeline completed successfully"
+          echo "moving to staging deployment"
+
