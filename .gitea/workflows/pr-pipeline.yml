@@ -107,7 +107,7 @@ jobs:
 
     env:
       NAMESPACE: dev
-      VALUES_FILE: helm-chart/values-dev.yaml
+      VALUES_FILE: ./helm-chart/values-dev.yaml
 
     steps:
       - name: Checkout
@@ -187,7 +187,7 @@ jobs:
 
     env:
       NAMESPACE: staging
-      VALUES_FILE: helm-chart/values-stagin.yaml
+      VALUES_FILE: ./helm-chart/values-staging.yaml
 
     steps:
       - name: Checkout

@@ -108,7 +108,7 @@ jobs:
 
     env:
       NAMESPACE: live
-      VALUES_FILE: ./helm-chart/kubernetes-app-nginx/values-live.yaml
+      VALUES_FILE: ./helm-chart/values-live.yaml
 
     steps:
       - name: Checkout
