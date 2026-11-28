@@ -6,6 +6,8 @@
 
 # ---------- variables ----------
 HELM_CHART_PATH := ./helm-chart/kubernetes-app-nginx
+MODULE_NAME = grafan-lxd-monitoring
+BUILD_OUTPUT = /tmp/main
 GO = docker run --rm --user $(shell id -u):$(shell id -g) \
   -e HOME=/tmp -e GOCACHE=/tmp/.cache \
   -v "$(CURDIR)/app":/app -w /app golang:1.26.2-alpine
@@ -26,7 +28,7 @@ help:
 
 # ---------- Go ----------
 init:
-	$(GO) go mod init grafana-lxd-monitoring
+	$(GO) go mod init $(MODULE_NAME)
 
 tidy:
 	$(GO) go mod tidy
@@ -38,7 +40,7 @@ fmt-fix:
 	$(GO) gofmt -w .
 
 check:
-	$(GO) sh -c 'test -z "$$(gofmt -l .)" || { gofmt -l .; exit 1; } && go vet ./... && go build -o /tmp/test . && echo OK'
+	$(GO) sh -c 'test -z "$$(gofmt -l .)" || { gofmt -l .; exit 1; } && go vet ./... && go build -o $(BUILD_OUTPUT) . && echo OK'
 
 all:
 	$(GO) sh -c 'go mod tidy && gofmt -w . && go vet ./... && go build -o /tmp/main .'
