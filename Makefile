@@ -5,8 +5,8 @@
 .DEFAULT_GOAL := help
 
 # ---------- variables ----------
-HELM_CHART_PATH := ./helm-chart/kubernetes-app-nginx
-MODULE_NAME = grafan-lxd-monitoring
+HELM_CHART_PATH := ./helm-chart
+MODULE_NAME = kubernetes-app-goapp-dashboard
 BUILD_OUTPUT = /tmp/main
 GO = docker run --rm --user $(shell id -u):$(shell id -g) \
   -e HOME=/tmp -e GOCACHE=/tmp/.cache \
