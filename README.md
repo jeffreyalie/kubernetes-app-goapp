@@ -268,7 +268,7 @@ for NS in dev staging live; do
   microk8s kubectl create secret docker-registry harbor-pull \
     --docker-server=harbor.local \
     --docker-username='robot$microk8s+microk8s' \
-    --docker-password='EdWc3ihTH1uKvaJ5TNmQsX6pJaOrZAvZ' \
+    --docker-password='xxxxxxxxxxxxxxxxxxx' \
     -n $NS --dry-run=client -o yaml | microk8s kubectl apply -f -
 done
 ```
