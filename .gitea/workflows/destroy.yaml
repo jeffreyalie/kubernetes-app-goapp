@@ -55,7 +55,7 @@ jobs:
           echo "Uninstalling from namespace: ${{ github.event.inputs.namespace }}"
           
           # Use --wait to ensure resources are actually gone before finishing
-          helm uninstall ${{env.RELEASENAME}} \
+          helm uninstall ${{ env.RELEASE_NAME }} \
             --namespace ${{ github.event.inputs.namespace }} \
             --wait || echo "Release not found, skipping."
 
