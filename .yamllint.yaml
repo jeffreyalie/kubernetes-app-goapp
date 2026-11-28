@@ -4,6 +4,7 @@ ignore: |
   **/templates/
   **/dashboards/
   .git/
+  ./manual-deployment/
 
 rules:
   line-length: disable
