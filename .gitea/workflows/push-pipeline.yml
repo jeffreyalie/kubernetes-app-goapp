@@ -51,6 +51,7 @@ jobs:
   # ----------------------------------------------------------------
   build:
     needs: go-linting
+    if: ${{ !cancelled() && !failure() }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
