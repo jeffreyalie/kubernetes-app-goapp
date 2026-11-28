@@ -64,4 +64,3 @@ jobs:
         run: |
           rm -f /tmp/kubeconfig
           echo "PR pipeline completed successfully"
-

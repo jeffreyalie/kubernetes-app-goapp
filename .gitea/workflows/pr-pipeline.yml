@@ -233,4 +233,3 @@ jobs:
           rm -f /tmp/kubeconfig
           echo "PR pipeline completed successfully"
           echo "moving to staging deployment"
-
