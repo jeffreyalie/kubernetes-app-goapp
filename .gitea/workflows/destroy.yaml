@@ -20,8 +20,8 @@ jobs:
   uninstall:
     runs-on: ubuntu-latest
     # Optional: Require approval for destruction
-    environment: ${{ github.event.inputs.namespace }} 
-    
+    environment: ${{ github.event.inputs.namespace }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,7 +44,7 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"role_id\":\"${VAULT_ROLE_ID}\",\"secret_id\":\"${VAULT_SECRET_ID}\"}" \
             | jq -r '.auth.client_token')
-          
+
           curl -s -k -H "X-Vault-Token: ${VAULT_TOKEN}" \
             "${VAULT_ADDR}/v1/homelab/data/microk8s" \
             | jq -r '.data.data.kubeconfig' > /tmp/kubeconfig
@@ -53,7 +53,7 @@ jobs:
         run: |
           export KUBECONFIG=/tmp/kubeconfig
           echo "Uninstalling from namespace: ${{ github.event.inputs.namespace }}"
-          
+
           # Use --wait to ensure resources are actually gone before finishing
           helm uninstall ${{ env.RELEASE_NAME }} \
             --namespace ${{ github.event.inputs.namespace }} \

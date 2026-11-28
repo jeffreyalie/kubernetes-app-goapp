@@ -84,7 +84,7 @@ jobs:
             --username "$HARBOR_USERNAME" \
             --password-stdin
 
-          echo "Successfully authenticated with Harbor"        
+          echo "Successfully authenticated with Harbor"
 
       - name: Build Docker image
         run: |
@@ -109,11 +109,11 @@ jobs:
     env:
       NAMESPACE: live
       VALUES_FILE: ./helm-chart/kubernetes-app-nginx/values-live.yaml
-      
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-     
+
       - name: Install helm
         uses: azure/setup-helm@v4
         with:
@@ -176,5 +176,4 @@ jobs:
         run: |
           rm -f /tmp/kubeconfig
           echo "PR pipeline completed successfully"
-
 
